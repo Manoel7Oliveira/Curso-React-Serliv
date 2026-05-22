@@ -6,7 +6,7 @@ function App() {
     return (
         <>
             <Button text="Salvar" disable />  {/*importei o button do arquivo Button.jsx*/}
-            <Button />
+            <Button text="Salvar 2" />
             <Button disable />
             <Card titulo="titulo 1" descrição="descrição 1" />
             <Card titulo="titulo 2" descrição="descrição 2" />

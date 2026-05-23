@@ -13,6 +13,7 @@ function Button({ text = "Click default", disable = '', onClique }) {
         if (onClique && typeof onClique === 'function') {
             onClique();
         }
+
     }
 
     return (

@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import styles from "./Button.module.css"  // Esse é o css module, é uma forma de evitar
 //  vazamento quando colocamos classes com o mesmo nome. Essa é a sintaxe de importação. E a sintaxe pra usar é className={styles.nomedaclassaqui}
 
@@ -7,6 +8,18 @@ window.addEventListener("resize", () => {console.log('resize')})
 */
 function Button({ text = "Click default", disable = '', onClique }) {
     // A função aqui dentro, pode acessar as props do componente. 
+
+    const fn = () => { console.log('resize') }
+
+    useEffect(() => {
+        window.addEventListener('resize', fn);
+
+        return () => {
+            window.removeEventListener('resize', fn);
+        }
+
+    }, [])
+
     function btnClicado() {
         console.log('btn', text)
 

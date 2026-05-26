@@ -7,7 +7,6 @@ export default function FormTextarea() {
     const [status, setStatus] = useState('Waiting');
     const textareaFocus = useRef(null);
 
-
     function handleSubmit(e) {
         e.preventDefault();
         setStatus('Sending');
@@ -42,12 +41,12 @@ export default function FormTextarea() {
 
                 {status !== 'Sent successfully' ? (
                     <button disabled={!response.length || status === 'Sending'} >
-                        {status === 'Waiting' || status === 'Sent successfully' ? "Enviar" : "Aguarde um momento"}
+                        {status === 'Waiting' || status === 'Sent successfully' ? "Send" : "Please wait a moment"}
 
                     </button>
                 ) : null}
 
-                {status === 'Sending' ? (<p>Estamos enviando sua mensagem</p>) : ''}
+                {status === 'Sending' ? (<p>We are sending your message.</p>) : ''}
                 <p>{status}</p>
 
             </form>

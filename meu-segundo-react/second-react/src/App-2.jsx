@@ -5,6 +5,7 @@ function App() {
 
   const [valor, setValor] = useState('0');
   const [unidade, setUnidade] = useState('C');
+  
   // Converter para Celsius
   const celsius = unidade === 'F' ? (parseFloat(valor) - 32) / 1.8 : (parseFloat(valor));
   // Converter para fahrenheit
@@ -17,7 +18,7 @@ function App() {
 
         <div className={styles.inputGroup}>
           <label htmlFor="celsius">Celsius:</label>
-          <input type="number" value={unidade === 'C' ? valor : celsius.toFixed(1)} onChange={(e) => {
+          <input type="number" id="celsius" value={unidade === 'C' ? valor : celsius.toFixed(1)} onChange={(e) => {
             setUnidade('C');
             setValor(e.target.value);
           }} />
@@ -26,7 +27,7 @@ function App() {
 
         <div className={styles.inputGroup}>
           <label htmlFor="fahrenheit">fahrenheit:</label>
-          <input type="number" value={unidade === 'F' ? valor : fahrenheit.toFixed(1)} onChange={(e) => {
+          <input type="number" id="fahrenheit" value={unidade === 'F' ? valor : fahrenheit.toFixed(1)} onChange={(e) => {
             setUnidade('F');
             setValor(e.target.value);
           }} />

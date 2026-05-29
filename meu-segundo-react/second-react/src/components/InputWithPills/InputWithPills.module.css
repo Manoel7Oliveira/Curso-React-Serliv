@@ -1,0 +1,21 @@
+.container {
+    display: flex;
+    gap: .5rem;
+    margin-top: 1rem;
+}
+
+.pill {
+    background-color: black;
+    color: white;
+    padding: .5rem 1rem;
+    border-radius: 100%;
+    display: flex;
+    gap: .5rem;
+
+    button {
+        cursor: pointer;
+        background-color: #191919;
+        border: none;
+    }
+
+}

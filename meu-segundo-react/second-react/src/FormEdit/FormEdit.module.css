@@ -1,0 +1,34 @@
+.container {
+    display: flex;
+    gap: 1rem;
+    padding: 20px;
+
+    h2 {
+        white-space: nowrap;
+    }
+}
+
+.list {
+    flex: 1;
+
+    h1 {
+        font-size: 40px;
+    }
+}
+
+.item {
+    cursor: pointer;
+    padding: 8px;
+    border-bottom: 1px solid #eee;
+}
+
+.item:hover {
+    background: #f9f9f9;
+}
+
+.edit {
+    flex: 1;
+    padding: 20px;
+    background: #f0f0f020;
+    border-radius: 8px;
+}

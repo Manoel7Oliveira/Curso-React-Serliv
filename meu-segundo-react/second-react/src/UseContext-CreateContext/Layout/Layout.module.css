@@ -1,0 +1,14 @@
+.container {
+    min-height: 100vh;
+    transition: all 0, 3s ease;
+}
+
+.Light {
+    background-color: #ffffff;
+    color: #111111;
+}
+
+.Dark {
+    background-color: #111111;
+    color: #ffffff;
+}

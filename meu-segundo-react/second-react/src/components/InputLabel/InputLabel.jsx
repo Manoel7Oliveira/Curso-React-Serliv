@@ -5,6 +5,13 @@ export function InputLabel({ disclaimer, label, value = '0', type = 'text', onVa
 
     const idSingle = useId();
 
+    // useId é um hook do React que gera um ID único para cada componente.
+    // Ele é útil para associar rótulos a elementos de formulário, 
+    // garantindo acessibilidade e evitando conflitos de ID em casos de renderização condicional ou múltiplas
+    // instâncias do mesmo componente.
+
+
+
     return (
 
         <>

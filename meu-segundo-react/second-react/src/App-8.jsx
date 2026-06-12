@@ -49,6 +49,7 @@ function App() {
       <Activity mode={show ? 'visible' : 'hidden'}>
         <MeuComponent />
       </Activity>
+      {/* O Activity controla a visibilidade do componente filho com base no modo especificado */}
 
     </div>
   )

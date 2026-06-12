@@ -6,6 +6,11 @@ function Contato() {
     const [enviando, setEnviando] = useState(false);
     const navigate = useNavigate();
 
+    // O useNavigate é um hook do React Router que permite navegar programaticamente para outras rotas.
+    // Ele retorna uma função que pode ser chamada para navegar para uma rota específica.
+    // A função aceita um argumento que pode ser uma string representando a URL ou um número representando o número de passos 
+    // a navegar no histórico.
+
     function handleSubmit(e) {
         e.preventDefault();
 

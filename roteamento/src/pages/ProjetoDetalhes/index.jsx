@@ -4,6 +4,10 @@ import { listaProjetos } from "../projetos/dados";
 
 function ProjetoDetalhes() {
     const { id } = useParams();
+    // O useParams é um hook do React Router que permite acessar os parâmetros da URL.
+    // Ele retorna um objeto com os parâmetros da URL, 
+    // onde as chaves são os nomes dos parâmetros definidos na rota e os valores são os valores correspondentes na URL.
+
     console.log(typeof id)
 
     const projeto = listaProjetos.find(p => p.id === id);

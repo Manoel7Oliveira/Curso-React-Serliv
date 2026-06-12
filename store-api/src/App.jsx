@@ -2,7 +2,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom"
 import Layout from "./components/Layout/Layout"
 import ProdutoDetalhes from "./pages/ProdutoDetalhes"
 import Home from "./pages/Home"
-import Produtos from "./pages/Produtos"
+import Produtos from "./pages/Produtos/produtosSuspense"
 
 // O index é a rota padrão, ou seja, quando o caminho for igual a "/" ele irá renderizar o componente Home
 // O path é a rota, ou seja, quando o caminho for igual a "/produtos" ele irá renderizar o componente Produtos

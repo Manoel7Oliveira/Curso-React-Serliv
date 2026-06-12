@@ -6,7 +6,7 @@ function Produtos() {
 
     const [produtos, setProdutos] = useState([]);
     const [carregando, setCarregando] = useState(true);
-
+   
     useEffect(() => {
 
         async function fetchProdutos() {
@@ -16,7 +16,7 @@ function Produtos() {
                 const resposta = await fetch('https://fakestoreapi.com/products')
                 const data = await resposta.json()
                 setProdutos(data);
-
+             
             } catch (err) {
                 console.log('Error', err)
             } finally {
@@ -41,7 +41,7 @@ function Produtos() {
 
                 {produtos.map(produto => (
                     <article key={produto.id} className={styles.card}>
-                        <div className={styles.img}>
+                        <div className={styles.image}>
                             <img src={produto.image} alt={produto.title} />
                         </div>
 

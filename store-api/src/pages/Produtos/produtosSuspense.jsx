@@ -1,8 +1,9 @@
 import { Suspense, use } from "react"
 import { Link } from "react-router-dom";
 import styles from "./Produtos.module.css"
+import ProdutosSkeleton from "./ProdutosSkeleton";
 
-const produtosPromisse = fetch('https://fakestoreapi.com/products').then(res => res.json())
+const produtosPromisse = fetch('https://fakestoreapi.com/products').then(res => res.json());
 
 function ListaProdutos() {
 
@@ -43,7 +44,8 @@ function Produtos() {
 
             <h2>Nossos produtos</h2>
 
-            <Suspense fallback={<div className={styles.loading}>Carregando Produtos...</div>}>
+            {/* <Suspense fallback={<div className={styles.loading}>Carregando Produtos...</div>}> */}
+            <Suspense fallback={<ProdutosSkeleton />}>
                 <ListaProdutos />
             </Suspense>
 

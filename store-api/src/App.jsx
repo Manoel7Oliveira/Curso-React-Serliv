@@ -1,6 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 import Layout from "./components/Layout/Layout"
-import ProdutoDetalhes from "./pages/ProdutoDetalhes"
+import ProdutoDetalhes from "./pages/ProdutoDetalhes/produtoDetalhesSuspense"
 import Home from "./pages/Home"
 import Produtos from "./pages/Produtos/produtosSuspense"
 
@@ -16,7 +16,6 @@ import Produtos from "./pages/Produtos/produtosSuspense"
 
 
 function App() {
-
 
   return (
     <BrowserRouter>

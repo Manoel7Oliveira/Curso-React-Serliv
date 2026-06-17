@@ -4,6 +4,34 @@ import { Suspense, useMemo } from "react";
 import ProdutoDetalhesConteudo from "./ProdutoDetalhesConteudo";
 import ErrorBoundary from "./ErrorBoundary";
 
+function MensagemError({ error }) {
+    console.log('-----error------');
+    console.dir(error);
+
+
+    if (error.message === 'Failed to fetch') return (
+        <>
+
+            <h2>Erro ao carregar o produto</h2>
+            <Link to={'/produtos'}>Voltar</Link>
+
+        </>
+    )
+
+    return (
+
+        <>
+
+
+            <h2>Erro ao carregar este produto</h2>
+            <Link to={'/produtos'}>Voltar para página de produtos</Link>
+
+        </>
+
+    )
+
+}
+
 function ProdutoDetalhes() {
 
     const { id } = useParams();
@@ -25,7 +53,8 @@ function ProdutoDetalhes() {
 
         <article className={styles.container}>
             <Link className={styles.backbtn} to='/produtos'>Voltar</Link>
-            <ErrorBoundary fallback={<p>Nao foi possivel carregar o produto</p>}>
+            {/* <ErrorBoundary fallback={<p>Nao foi possivel carregar o produto</p>}> */}
+            <ErrorBoundary fallback={(error) => <MensagemError error={error} />}>
                 <Suspense fallback={<p>Carregando produto...</p>}>
                     <ProdutoDetalhesConteudo produtoPromise={produtoPromise} />
                 </Suspense>

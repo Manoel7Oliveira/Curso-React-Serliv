@@ -17,6 +17,10 @@ class ErrorBoundary extends React.Component {
 
     render() {
         if (this.state.hasError) {
+
+            if (typeof this.props.fallback === 'function') {
+              return this.props.fallback(this.state.error);
+            }
             // Você pode renderizar qualquer UI de fallback personalizada
             return this.props.fallback || <p>Algo deu errado</p>;
         }

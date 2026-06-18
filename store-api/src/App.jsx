@@ -3,6 +3,7 @@ import Layout from "./components/Layout/Layout"
 import ProdutoDetalhes from "./pages/ProdutoDetalhes/produtoDetalhesSuspense"
 import Home from "./pages/Home"
 import Produtos from "./pages/Produtos/produtosSuspense"
+import Carrinho from "./pages/Carrinho/Carrinho"
 
 // O index é a rota padrão, ou seja, quando o caminho for igual a "/" ele irá renderizar o componente Home
 // O path é a rota, ou seja, quando o caminho for igual a "/produtos" ele irá renderizar o componente Produtos
@@ -25,6 +26,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path="produtos" element={<Produtos />} />
           <Route path="produtos/:id" element={<ProdutoDetalhes />} />
+          <Route path="carrinho" element={<Carrinho />} />
         </Route>
 
       </Routes>

@@ -17,6 +17,11 @@
     cursor: pointer;
 }
 
+.sucess {
+    background-color: darkgreen;
+    transition: all 1s;
+}
+
 .backbtn {
     margin-bottom: 2rem;
     font-weight: bold;

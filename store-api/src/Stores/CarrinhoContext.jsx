@@ -12,6 +12,13 @@ export function CarrinhoProvider({ children }) {
         // array de objetos
     });
 
+    // Podemos passar uma função para o useState, e essa função só será executada na primeira renderização do componente,
+    //  ou seja, quando o componente for montado. 
+    // Isso é útil para evitar que a função seja executada toda vez que o componente for renderizado, 
+    // o que pode ser um problema de performance se a função for complexa ou demorada. No nosso caso, 
+    // a função é responsável por recuperar o carrinho do localStorage, 
+    // e isso só precisa ser feito uma vez, quando o componente for montado.
+
     useEffect(() => {
         localStorage.setItem("fakeStore:carrinho", JSON.stringify(itens));
     }, [itens]);
@@ -47,17 +54,31 @@ export function CarrinhoProvider({ children }) {
     }
 
     const atualizarQuantidade = (id, novaQuantidade) => {
+
+        if (novaQuantidade < 1) return
+
         setItens(prev => prev.map(item => {
             return item.id === id ? { ...item, quantidade: novaQuantidade } : item
+
         }));
+
     }
+
+    const limparCarrinho = () => setItens([]);
+
 
     const valorTotal = itens.reduce((acc, item) => acc + (item.price * item.quantidade), 0);
 
     const totalItens = itens.reduce((acc, item) => acc + item.quantidade, 0);
 
     return <CarrinhoContext.Provider value={{
-        adicionarAoCarrinho, itens, totalItens, removerDoCarrinho, atualizarQuantidade, valorTotal
+        adicionarAoCarrinho,
+        itens,
+        totalItens,
+        removerDoCarrinho,
+        atualizarQuantidade,
+        valorTotal,
+        limparCarrinho
     }}>
         {children}
     </CarrinhoContext.Provider>

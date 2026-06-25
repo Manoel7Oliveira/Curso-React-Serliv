@@ -4,7 +4,7 @@ const Reports = memo(() => {
     console.log('Reports Renderizado');
 
     const processData = () => {
-        return Array.from({ length: 1000 }, (_, i) => ({
+        return Array.from({ length: 100000 }, (_, i) => ({
             id: i,
             value: Math.floor(Math.random() * 1000)
         }));

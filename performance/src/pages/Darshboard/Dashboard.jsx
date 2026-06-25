@@ -1,6 +1,7 @@
-import { lazy, Suspense, useCallback, useEffect, useState } from 'react'
+import { lazy, Suspense, useCallback, useEffect, useState, useTransition } from 'react'
 import styles from './Dashboard.module.css'
 import ListTransaction from '../../Components/ListTransaction/ListTransaction';
+import Timer from './Timer';
 
 // import Reports from './Reports';
 const Reports = lazy(() => import('./Reports'));
@@ -21,11 +22,25 @@ const MOCK_DATA = Array.from({ length: 100 }, (_, i) => ({
 console.log('MOCK_DATA CRIADO ......');
 
 export default function Dashboard() {
+
     console.log('Dashboard renderizado');
 
-    const [time, setTime] = useState(new Date().toLocaleTimeString());
     const [transaction, setTransaction] = useState(MOCK_DATA);
     const [tab, setTab] = useState('transactions');
+    const [pendingTab, setPendingTab] = useState(null);
+
+    const [isPending, startTransition] = useTransition();
+
+    // O useTransition é usado para adiar a atualização do estado da aba (tab) quando o usuário clica em uma das abas.
+    // Isso é útil para otimizar o desempenho, especialmente quando a atualização do estado da aba envolve renderizações pesadas,
+    // como a renderização do componente Reports. Com o useTransition, a atualização do estado da aba é adiada até que o componente
+    // Reports seja carregado, evitando que o usuário veja uma tela em branco enquanto o componente é carregado.
+
+    // O useTransition retorna um array com dois elementos: isPending e startTransition.
+    // isPending é um booleano que indica se a atualização do estado da aba está pendente.
+    // startTransition é uma função que recebe uma função de atualização do estado da aba como argumento e adia 
+    // a atualização do estado da aba até que o componente Reports seja carregado.
+
 
     // const transaction = MOCK_DATA;
     // O transaction é uma referência para o array MOCK_DATA, que é criado apenas uma vez quando o componente é montado.
@@ -44,6 +59,24 @@ export default function Dashboard() {
 
     }, []);
 
+    const handleTabChanges = (nextTab) => {
+        setPendingTab(nextTab); //Urgente
+
+        startTransition(() => {
+            setTab(nextTab); // Nao urgente, devido ao useTransition
+        })
+    }
+
+    useEffect(() => {
+        console.log('isPending, pendingTab');
+        console.log(isPending, pendingTab);
+
+        if (!isPending) {
+            setPendingTab(null);
+        }
+
+    }, [isPending]);
+
     // O useCallback é usado para memorizar a função handleDelete, evitando que ela seja recriada a cada 
     // renderização do componente Dashboard.
     // Isso é útil para otimizar o desempenho, especialmente quando a função é passada como prop para componentes filhos,
@@ -55,29 +88,23 @@ export default function Dashboard() {
     // enquanto o useCallback é usado para memorizar funções. O useMemo retorna o valor memorizado,
     // enquanto o useCallback retorna a função memorizada.
 
-    useEffect(() => {
-        const timer = setInterval(() => {
-            setTime(new Date().toLocaleTimeString());
-        }, 1000)
-        return () => clearInterval(timer);
-    }, []);
-
     return (
 
         <div className={styles.container}>
             <header className={styles.header}>
                 <h1>Sistema Financeiro</h1>
                 <div className={styles.timeCard}>
-                    <span className={styles.timerValue}>{time}</span>
+                    {/* <span className={styles.timerValue}>{time}</span> */}
+                    <Timer />
                 </div>
             </header>
 
             <nav className={styles.nav}>
                 <button className={`${styles.navButton} ${tab === 'transactions' ? styles.activeButton : ''}`}
-                    onClick={() => { setTab('transactions') }} >Transactions</button>
+                    onClick={() => { handleTabChanges('transactions') }} >{isPending && pendingTab === 'transactions' ? 'Aguarde' : 'Transactions'}</button>
 
                 <button className={`${styles.navButton} ${tab === 'reports' ? styles.activeButton : ''}`}
-                    onClick={() => { setTab('reports') }} >Reports</button>
+                    onClick={() => { handleTabChanges('reports') }} >{isPending && pendingTab === 'reports' ? 'Aguarde' : 'Reports'}</button>
             </nav>
 
             <section>
@@ -88,8 +115,8 @@ export default function Dashboard() {
                 )}
 
                 {tab === 'reports' && (
-                    <Suspense fallback={<p>Carregando Relatorio...</p>}>    
-                    <Reports />
+                    <Suspense fallback={<p>Carregando Relatorio...</p>}>
+                        <Reports />
                     </Suspense>
                 )}
 

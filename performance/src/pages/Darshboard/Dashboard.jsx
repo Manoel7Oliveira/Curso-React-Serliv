@@ -1,4 +1,4 @@
-import { lazy, Suspense, useCallback, useEffect, useState, useTransition } from 'react'
+import { lazy, Suspense, useCallback, useDeferredValue, useEffect, useState, useTransition } from 'react'
 import styles from './Dashboard.module.css'
 import ListTransaction from '../../Components/ListTransaction/ListTransaction';
 import Timer from './Timer';
@@ -12,7 +12,7 @@ const Reports = lazy(() => import('./Reports'));
 const MOCK_DATA = Array.from({ length: 100 }, (_, i) => ({
 
     id: i,
-    client: `Client ${i + 1}`,
+    client: `Cliente ${i + 1}`,
     amount: Math.floor(Math.random() * 1000),
     date: new Date().toLocaleTimeString(),
     status: Math.random() > 0.5 ? "Concluido" : "Pendente"
@@ -27,9 +27,18 @@ export default function Dashboard() {
 
     const [transaction, setTransaction] = useState(MOCK_DATA);
     const [tab, setTab] = useState('transactions');
-    const [pendingTab, setPendingTab] = useState(null);
+    const [isPendingTab, setIsPendingTab] = useState(null);
+    const [searchTerm, setSearchTerm] = useState('');
+    //const [filteredTransaction, setFilteredTransaction] = useState(MOCK_DATA);
 
     const [isPending, startTransition] = useTransition();
+    const deferredSearchTerm = useDeferredValue(searchTerm);
+
+    // const [isPendingSearch, startSearchTransition] = useTransition();
+    // Deixamos de ultilizar o useTransition, pra usar o useDeferredValue
+
+    const filteredTransaction = transaction.filter(t => t.client.toLowerCase().includes(deferredSearchTerm.toLowerCase()));
+    const isPendingSearch = deferredSearchTerm !== searchTerm;
 
     // O useTransition é usado para adiar a atualização do estado da aba (tab) quando o usuário clica em uma das abas.
     // Isso é útil para otimizar o desempenho, especialmente quando a atualização do estado da aba envolve renderizações pesadas,
@@ -41,6 +50,18 @@ export default function Dashboard() {
     // startTransition é uma função que recebe uma função de atualização do estado da aba como argumento e adia 
     // a atualização do estado da aba até que o componente Reports seja carregado.
 
+    // O useDeferredValue é usado para adiar a atualização do estado da busca (searchTerm) quando o usuário digita no input de busca.
+    // Isso é útil para otimizar o desempenho, especialmente quando a atualização do estado da busca envolve renderizações pesadas,
+    // como a renderização do componente ListTransaction. Com o useDeferredValue, a atualização do estado da busca é adiada até que 
+    // o componente
+    // ListTransaction seja renderizado, evitando que o usuário veja uma tela em branco enquanto o componente é renderizado.
+
+    // O useDeferredValue retorna um valor que é atualizado de forma assíncrona, ou seja, ele só será atualizado quando o componente
+    // ListTransaction for renderizado. Isso significa que o valor retornado pelo useDeferredValue pode estar desatualizado 
+    // em relação ao valor
+    // atual do estado da busca (searchTerm). No entanto, isso não é um problema, pois o valor retornado pelo useDeferredValue 
+    // é usado apenas
+    // para filtrar os dados da lista de transações (filteredTransaction), e não para atualizar o estado da busca (search
 
     // const transaction = MOCK_DATA;
     // O transaction é uma referência para o array MOCK_DATA, que é criado apenas uma vez quando o componente é montado.
@@ -52,31 +73,6 @@ export default function Dashboard() {
     // re-renderizado mesmo que as props não mudassem. Com isso o memo não teria efeito, 
     // pois o ListTransaction seria re-renderizado a cada renderização do Dashboard.
 
-    const handleDelete = useCallback((id) => {
-        if (id === undefined) return;
-
-        setTransaction(prev => prev.filter(t => t.id !== id));
-
-    }, []);
-
-    const handleTabChanges = (nextTab) => {
-        setPendingTab(nextTab); //Urgente
-
-        startTransition(() => {
-            setTab(nextTab); // Nao urgente, devido ao useTransition
-        })
-    }
-
-    useEffect(() => {
-        console.log('isPending, pendingTab');
-        console.log(isPending, pendingTab);
-
-        if (!isPending) {
-            setPendingTab(null);
-        }
-
-    }, [isPending]);
-
     // O useCallback é usado para memorizar a função handleDelete, evitando que ela seja recriada a cada 
     // renderização do componente Dashboard.
     // Isso é útil para otimizar o desempenho, especialmente quando a função é passada como prop para componentes filhos,
@@ -87,6 +83,45 @@ export default function Dashboard() {
     // O useCallback é diferente do useMemo, que é usado para memorizar valores ou funções,
     // enquanto o useCallback é usado para memorizar funções. O useMemo retorna o valor memorizado,
     // enquanto o useCallback retorna a função memorizada.
+
+
+    const handleDelete = useCallback((id) => {
+        if (id === undefined) return;
+
+        setTransaction(prev => prev.filter(t => t.id !== id));
+
+    }, []);
+
+    // Deixamos de ultilizar a função handleSearch, pra usar o useDeferredValue
+
+    // const handleSearch = (value) => {
+    //     setSearchTerm(value); // Urgente. Fica fora do transition porque o input precisa responder imediatamente, sem atraso!
+
+    //     startSearchTransition(() => {
+    // Nao urgente!
+    //         const filtered = transaction.filter(t => t.client.toLowerCase().includes(value.toLowerCase()));
+    //         setFilteredTransaction(filtered);
+    //     });
+    // }
+
+    const handleTabChanges = (nextTab) => {
+        setIsPendingTab(nextTab); //Urgente
+
+        startTransition(() => {
+            setTab(nextTab); // Nao urgente, devido ao useTransition
+        })
+    }
+
+    useEffect(() => {
+        console.log('isPending, isPendingTab');
+        console.log(isPending, isPendingTab);
+
+        if (!isPending) {
+            setIsPendingTab(null);
+        }
+
+    }, [isPending]);
+
 
     return (
 
@@ -101,17 +136,24 @@ export default function Dashboard() {
 
             <nav className={styles.nav}>
                 <button className={`${styles.navButton} ${tab === 'transactions' ? styles.activeButton : ''}`}
-                    onClick={() => { handleTabChanges('transactions') }} >{isPending && pendingTab === 'transactions' ? 'Aguarde' : 'Transactions'}</button>
+                    onClick={() => { handleTabChanges('transactions') }} >{isPending && isPendingTab === 'transactions' ? 'Aguarde' : 'Transactions'}</button>
 
                 <button className={`${styles.navButton} ${tab === 'reports' ? styles.activeButton : ''}`}
-                    onClick={() => { handleTabChanges('reports') }} >{isPending && pendingTab === 'reports' ? 'Aguarde' : 'Reports'}</button>
+                    onClick={() => { handleTabChanges('reports') }} >{isPending && isPendingTab === 'reports' ? 'Aguarde' : 'Reports'}</button>
             </nav>
 
             <section>
                 <h2>Ultimas Transações</h2>
 
                 {tab === 'transactions' && (
-                    <ListTransaction items={transaction} onDelete={handleDelete} />
+                    <>
+                        <input type="text" placeholder='Buscar clientes' value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} style={{ padding: '0.5rem' }} />
+                        <div style={{ opacity: isPendingSearch ? .5 : 1, transition: 'opacity .3s' }}>
+                            <ListTransaction items={filteredTransaction} onDelete={handleDelete} />
+                        </div>
+
+                    </>
+
                 )}
 
                 {tab === 'reports' && (

@@ -3,6 +3,7 @@ import { memo } from "react";
 const Reports = memo(() => {
     console.log('Reports Renderizado');
 
+    // Simulando processo custoso
     const processData = () => {
         return Array.from({ length: 100000 }, (_, i) => ({
             id: i,

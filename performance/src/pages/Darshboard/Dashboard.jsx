@@ -2,6 +2,7 @@ import { lazy, Suspense, useCallback, useDeferredValue, useEffect, useState, use
 import styles from './Dashboard.module.css'
 import ListTransaction from '../../Components/ListTransaction/ListTransaction';
 import Timer from './Timer';
+import TransactionForm from '../../Components/TransactionForm/TransactionForm';
 
 // import Reports from './Reports';
 const Reports = lazy(() => import('./Reports'));
@@ -10,23 +11,23 @@ const Reports = lazy(() => import('./Reports'));
 // ele só será carregado quando for realmente necessário.
 
 
-function dataAleatoria() {
-    const inicio = new Date("2020-01-01").getTime();
-    const fim = new Date("2026-06-30").getTime();
+// function dataAleatoria() {
+//     const inicio = new Date("2020-01-01").getTime();
+//     const fim = new Date("2026-06-30").getTime();
 
-    const data = new Date(
-        inicio + Math.random() * (fim - inicio)
-    )
+//     const data = new Date(
+//         inicio + Math.random() * (fim - inicio)
+//     )
 
-    return data.toLocaleDateString();
-}
+//     return data.toLocaleDateString();
+// }
 
 const MOCK_DATA = Array.from({ length: 100 }, (_, i) => ({
 
     id: i,
     client: `Cliente ${i + 1}`,
     amount: Math.floor(Math.random() * 1000),
-    date: dataAleatoria(),
+    date: new Date().toLocaleTimeString(),
     status: Math.random() > 0.5 ? "Concluido" : "Pendente"
 
 }));
@@ -91,6 +92,11 @@ export default function Dashboard() {
 
     }, [isPending]);
 
+    const handleAddTransaction = (newData) => {
+        console.log('handleAddTransaction');
+        console.log(newData);
+        setTransaction(prev => [newData, ...prev]);
+    }
 
     return (
 
@@ -117,6 +123,7 @@ export default function Dashboard() {
                 {tab === 'transactions' && (
                     <>
                         <input type="text" placeholder='Buscar clientes' value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} style={{ padding: '0.5rem' }} />
+                        <TransactionForm onAddtransaction={handleAddTransaction} />
                         <div style={{ opacity: isPendingSearch ? .5 : 1, transition: 'opacity .3s' }}>
                             <ListTransaction items={filteredTransaction} onDelete={handleDelete} />
                         </div>
